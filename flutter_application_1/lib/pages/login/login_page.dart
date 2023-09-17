@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/home/home_page.dart';
 import 'package:flutter_application_1/pages/login/signup_page.dart';
 import 'package:flutter_application_1/pages/main_page.dart';
 import 'package:flutter_application_1/services/users/users_services.dart';
@@ -28,7 +29,8 @@ class _LoginPageState extends State<LoginPage> {
               height: 60,
             ),
             Image.asset(
-              "assets/images/logopata.png",
+              "assets/images/Untitled.png",
+              //C:\Users\Thalita\Documents\VSCode\ong_back_end\flutter_application_1\assets\images\Untitled.png
               //height: 300,
             ),
             const SizedBox(
@@ -87,10 +89,6 @@ class _LoginPageState extends State<LoginPage> {
                 bottom: 10.0,
               ),
               alignment: Alignment.bottomRight,
-              child: const Text(
-                "esqueci a senha",
-                style: TextStyle(color: Color.fromARGB(255, 61, 6, 112)),
-              ),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -103,10 +101,11 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () async {
                     if (await _userServices.signIn(
                         _email.text, _password.text)) {
+                      // ignore: use_build_context_synchronously
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MainPage(),
+                            builder: (context) => const MainPage(),
                           ));
                     }
                   },
@@ -117,24 +116,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(
                   height: 20,
-                ),
-                const Text(
-                  "ou",
-                  style: TextStyle(fontSize: 20),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50),
-                    shape: LinearBorder.bottom(),
-                  ),
-                  onPressed: () async {},
-                  child: const Text(
-                    "Login com o Google",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(

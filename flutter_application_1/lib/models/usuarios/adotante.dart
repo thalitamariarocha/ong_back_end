@@ -9,6 +9,7 @@ class Adotante {
   String? endereco;
   String? renda;
   String? tipoMoradia;
+  String? image;
 
   //construtor
   Adotante(
@@ -21,17 +22,8 @@ class Adotante {
       this.telefone,
       this.endereco,
       this.renda,
-      this.tipoMoradia});
-
-  //converter o objeto do usuario para formato xml do json(firebase)
-  // Map<String, dynamic> toJsonFirebase() {
-  //   return {
-  //     'id': id,
-  //     'email': email,
-  //     'senha': senha,
-      
-  //   };
-  // }
+      this.tipoMoradia,
+      this.image});
 
   Map<String, dynamic> toJson() {
     return {
@@ -44,9 +36,8 @@ class Adotante {
       'telefone': telefone,
       'endereco': endereco,
       'renda': renda,
-      'tipoMoradia': tipoMoradia
+      'tipoMoradia': tipoMoradia,
+      'image': image,
     };
   }
 }
-
-

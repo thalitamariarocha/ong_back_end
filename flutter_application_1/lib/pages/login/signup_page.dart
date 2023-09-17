@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'dart:typed_data';
 import 'package:br_validators/masks/br_masks.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,9 @@ import 'package:flutter_application_1/pages/login/login_page.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:multi_masked_formatter/multi_masked_formatter.dart';
 import '../../services/users/users_services.dart';
+
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 
 class SignUpPage extends StatelessWidget {
   SignUpPage({Key? key}) : super(key: key);
@@ -23,8 +27,17 @@ class SignUpPage extends StatelessWidget {
   final UserServices _userServices = UserServices();
   final DateFormat dateFormat = DateFormat('dd-MM-yyyy');
   var cpfMask = BRMasks.cpf;
-  //  final MaskTextInputFormatter _moneyMaskFormatter =
-  //    MaskTextInputFormatter(mask: 'R\$ ###.###,##',  filter: {"#": RegExp(r'[0-9]')},);
+  late String urlImg;
+
+  Future carregaImagem() async {
+    final image = await ImagePickerWeb.getImageAsBytes();
+
+    if (image != null) {
+      return image;
+    }
+
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +50,7 @@ class SignUpPage extends StatelessWidget {
               height: 60,
             ),
             Image.asset(
-              "assets/images/",
+              "assets/images/Untitled.png",
               fit: BoxFit.contain,
               //width: 300,
             ),
@@ -260,6 +273,17 @@ class SignUpPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
+
+            //-------------------------------------------------------------------------------
+            // carregar imagem teste
+            ElevatedButton(
+              onPressed: () async {
+                //final image = await _userServices.carregaImagem();
+                await _userServices.pickAndUploadImage();
+              },
+              child: Text('selecione a imagem do seu doc. pessoal'),
+            ),
+
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -278,7 +302,9 @@ class SignUpPage extends StatelessWidget {
                         _dtnascimento.text,
                         _telefone.text,
                         _renda.text,
-                        _tipoMoradia.text)) {
+                        _tipoMoradia.text,
+                        )) {
+                      //  await _userServices.salvaImagem(image);
                       Navigator.pop(context);
                     } else {
                       debugPrint("erro, favor repetir");
@@ -286,27 +312,6 @@ class SignUpPage extends StatelessWidget {
                   }, //chamada do signup do user_services (controller)
                   child: const Text(
                     "Registrar",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Text(
-                  "ou",
-                  style: TextStyle(fontSize: 20),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50),
-                    shape: LinearBorder.bottom(),
-                  ),
-                  onPressed: () {},
-                  child: const Text(
-                    "Login com o Google",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                 ),
