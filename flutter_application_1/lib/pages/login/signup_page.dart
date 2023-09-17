@@ -3,10 +3,9 @@ import 'package:br_validators/masks/br_masks.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/login/login_page.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:multi_masked_formatter/multi_masked_formatter.dart';
 import '../../services/users/users_services.dart';
-
 
 class SignUpPage extends StatelessWidget {
   SignUpPage({Key? key}) : super(key: key);
@@ -38,8 +37,9 @@ class SignUpPage extends StatelessWidget {
               height: 60,
             ),
             Image.asset(
-              "assets/images/logo.png",
-              height: 150,
+              "assets/images/",
+              fit: BoxFit.contain,
+              //width: 300,
             ),
             const SizedBox(
               height: 15,
@@ -191,13 +191,14 @@ class SignUpPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                 inputFormatters: [
-              // Máscara para dinheiro
-              MaskedTextInputFormatter(
-                mask: '##.##',
-                type: MaskedTextInputType.number,
-              ),
-            ],
+                inputFormatters: [
+                  //mascara de dinheiro
+                  CurrencyTextInputFormatter(
+                    locale: 'br',
+                    //decimalDigits: 0,
+                    symbol: 'BRL',
+                  )
+                ],
                 keyboardType: TextInputType.number),
             //-------------------------------------------------------------------------------
             SizedBox(height: 10),
