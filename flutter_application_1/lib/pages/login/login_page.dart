@@ -33,19 +33,6 @@ class _LoginPageState extends State<LoginPage> {
               //C:\Users\Thalita\Documents\VSCode\ong_back_end\flutter_application_1\assets\images\Untitled.png
               //height: 300,
             ),
-            const SizedBox(
-              height: 15,
-            ),
-            const Center(
-              child: Text(
-                "Sistema de Adoção de Animais",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF0D045E),
-                ),
-              ),
-            ),
             SizedBox(height: 30),
             TextFormField(
               controller: _email,

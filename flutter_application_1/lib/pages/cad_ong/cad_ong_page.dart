@@ -2,7 +2,7 @@ import 'dart:html';
 import 'dart:typed_data';
 import 'package:br_validators/masks/br_masks.dart';
 import 'package:flutter_application_1/pages/main_page.dart';
-import 'package:flutter_application_1/services/voluntario/voluntario_services.dart';
+import 'package:flutter_application_1/services/ong/ong_services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/login/login_page.dart';
@@ -10,30 +10,17 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:multi_masked_formatter/multi_masked_formatter.dart';
 import '../../services/users/users_services.dart';
 
-class CadVoluntarioPage extends StatefulWidget {
-  CadVoluntarioPage({Key? key}) : super(key: key);
+class CadOngPage extends StatelessWidget {
+  CadOngPage({Key? key}) : super(key: key);
 
-  @override
-  State<CadVoluntarioPage> createState() => _CadVoluntarioPageState();
-}
-
-class _CadVoluntarioPageState extends State<CadVoluntarioPage> {
   final TextEditingController _email = TextEditingController();
-  final TextEditingController _password = TextEditingController();
-  final TextEditingController _dtnascimento = TextEditingController();
-  final TextEditingController _cpf = TextEditingController();
+  final TextEditingController _cnpj = TextEditingController();
   final TextEditingController _nome = TextEditingController();
   final TextEditingController _endereco = TextEditingController();
   final TextEditingController _telefone = TextEditingController();
-  final TextEditingController _renda = TextEditingController();
-  final TextEditingController _tipoUsuario = TextEditingController();
-  String selectedProfile = '';
-  //final List<String> options = ['Voluntário', 'Administrador'];
 
-  final VoluntarioServices _voluntarioServices = VoluntarioServices();
-  final DateFormat dateFormat = DateFormat('dd-MM-yyyy');
-  var cpfMask = BRMasks.cpf;
-  //late String selectedProfile = '';
+  final OngServices _services = OngServices();
+  var cnpjMask = BRMasks.cnpj;
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +35,13 @@ class _CadVoluntarioPageState extends State<CadVoluntarioPage> {
             Image.asset(
               "assets/images/Untitled.png",
               fit: BoxFit.contain,
-              //width: 300,
             ),
             const SizedBox(
               height: 15,
             ),
             const Center(
               child: Text(
-                "Novo Cadastro de Voluntário",
+                "Cadastrar ONG",
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -66,7 +52,7 @@ class _CadVoluntarioPageState extends State<CadVoluntarioPage> {
             TextFormField(
               controller: _nome,
               decoration: InputDecoration(
-                labelText: "Nome Completo",
+                labelText: "Nome Fantasia",
                 enabledBorder: const OutlineInputBorder(
                   borderSide: BorderSide(
                     width: 1.5,
@@ -82,9 +68,9 @@ class _CadVoluntarioPageState extends State<CadVoluntarioPage> {
             ),
             SizedBox(height: 10),
             TextFormField(
-              controller: _cpf,
+              controller: _cnpj,
               decoration: InputDecoration(
-                labelText: "CPF",
+                labelText: "CNPJ",
                 enabledBorder: const OutlineInputBorder(
                   borderSide: BorderSide(
                     width: 1.5,
@@ -98,7 +84,7 @@ class _CadVoluntarioPageState extends State<CadVoluntarioPage> {
                 ),
               ),
               keyboardType: TextInputType.number,
-              inputFormatters: [BRMasks.cpf],
+              inputFormatters: [BRMasks.cnpj],
             ),
             SizedBox(height: 10),
             TextFormField(
@@ -119,40 +105,11 @@ class _CadVoluntarioPageState extends State<CadVoluntarioPage> {
               ),
             ),
             SizedBox(height: 10),
-            //-------------------------------------//dt nascimento
-
-            TextFormField(
-              controller: _dtnascimento,
-              decoration: InputDecoration(
-                labelText: 'Data de nascimento',
-                hintText: 'DD/MM/AAAA',
-                prefixIcon: const Icon(Icons.calendar_today),
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 1.5,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                    width: 1.5,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              //keyboardType: TextInputType.datetime,
-              inputFormatters: [
-                MultiMaskedTextInputFormatter(
-                  masks: ['DD/MM/YYYY'],
-                  separator: '/',
-                ),
-              ],
-            ),
-            SizedBox(height: 10),
             // -----------------------------------------------------------------------------------
             TextFormField(
               controller: _telefone,
               decoration: InputDecoration(
-                labelText: 'Celular',
+                labelText: 'Telefone',
                 hintText: 'xx-xxxxx-xxxx',
                 enabledBorder: const OutlineInputBorder(
                   borderSide: BorderSide(
@@ -174,58 +131,6 @@ class _CadVoluntarioPageState extends State<CadVoluntarioPage> {
                 ),
               ],
             ),
-            //-------------------------------------------------------------------------------
-            const SizedBox(height: 10),
-
-            const Row(
-              children: [
-                Text('Selecione abaixo o tipo de perfil do usuário: '),
-              ],
-            ),
-
-            const SizedBox(height: 10),
-
-            // ListView.builder(
-            //   itemCount: options.length,
-            //   itemBuilder: (context, index) {
-            //     final option = options[index];
-            //     return ListTile(
-            //       title: Text(option),
-            //       leading: Radio(
-            //         value: option,
-            //         groupValue: selectedOption,
-            //         onChanged: (value) {
-            //           // Atualize o estado quando uma opção for selecionada.
-            //           // Isso fará com que o widget seja reconstruído com a nova seleção.
-            //           setState(() {
-            //             selectedOption = value!;
-            //           });
-            //         },
-            //       ),
-            //     );
-            //   },
-            // ),
-
-            RadioListTile(
-              title: Text('Voluntário'),
-              value: 'Voluntário',
-              groupValue: selectedProfile,
-              onChanged: (value) {
-                setState(() {
-                  selectedProfile = value.toString();
-                });
-              },
-            ),
-            RadioListTile(
-              title: Text('Administrador'),
-              value: 'Administrador',
-              groupValue: selectedProfile,
-              onChanged: (value) {
-                setState(() {
-                  selectedProfile = value.toString();
-                });
-              },
-            ),
 
             //-------------------------------------------------------------------------------
             SizedBox(height: 10),
@@ -246,28 +151,8 @@ class _CadVoluntarioPageState extends State<CadVoluntarioPage> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
-            TextFormField(
-              obscureText: true,
-              controller: _password,
-              decoration: InputDecoration(
-                labelText: "senha",
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 1.5,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                    width: 1.5,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
 
-            //-------------------------------------------------------------------------------
+            const SizedBox(height: 15),
 
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -277,40 +162,32 @@ class _CadVoluntarioPageState extends State<CadVoluntarioPage> {
                     minimumSize: const Size.fromHeight(50),
                     shape: LinearBorder.bottom(),
                   ),
+
                   onPressed: () async {
                     if (_email.text.isEmpty ||
-                        _password.text.isEmpty ||
+                        _cnpj.text.isEmpty ||
                         _nome.text.isEmpty ||
-                        _cpf.text.isEmpty ||
                         _endereco.text.isEmpty ||
-                        _dtnascimento.text.isEmpty ||
-                        _telefone.text.isEmpty ||
-                        selectedProfile.isEmpty) {
-                      _voluntarioServices.showErrorDialog(
+                        _telefone.text.isEmpty) {
+                      _services.showErrorDialog(
                           context, 'todos os campos devem ser preenchidos');
                       return;
                     }
-                    if (_password.text.length < 6) {
-                      debugPrint("senha menor que 6 caracteres");
-                      return;
-                    }
-                    if (await _voluntarioServices.signUp(
-                      _email.text,
-                      _password.text,
-                      _nome.text,
-                      _cpf.text,
-                      _endereco.text,
-                      _dtnascimento.text,
-                      _telefone.text,
-                      _renda.text,
-                      selectedProfile,
-                    )) {
-                      _voluntarioServices.showSuccessDialog(
+                    if (await _services.cadastrarOng
+                    (_email.text, _cnpj.text,
+                        _nome.text, _endereco.text, _telefone.text)) {
+                      _services.showSuccessDialog(
                           context, 'cadastro salvo com sucesso!');
-                      //Navigator.pop(context);
+                      //  await _userServices.salvaImagem(image);
+                      //  Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MainPage(),
+                        ),
+                      );
                     } else {
-                       _voluntarioServices.showErrorDialog(
-                           context, 'erro, favor repetir');
+                      _services.showErrorDialog(context, 'erro, favor repetir');
                     }
                   }, //chamada do signup do user_services (controller)
                   child: const Text(

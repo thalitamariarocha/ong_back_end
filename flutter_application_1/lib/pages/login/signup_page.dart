@@ -8,9 +8,6 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:multi_masked_formatter/multi_masked_formatter.dart';
 import '../../services/users/users_services.dart';
 
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker_web/image_picker_web.dart';
-
 class SignUpPage extends StatelessWidget {
   SignUpPage({Key? key}) : super(key: key);
 
@@ -28,16 +25,6 @@ class SignUpPage extends StatelessWidget {
   final DateFormat dateFormat = DateFormat('dd-MM-yyyy');
   var cpfMask = BRMasks.cpf;
   late String urlImg;
-
-  Future carregaImagem() async {
-    final image = await ImagePickerWeb.getImageAsBytes();
-
-    if (image != null) {
-      return image;
-    }
-
-    return null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +50,6 @@ class SignUpPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF0D045E),
                 ),
               ),
             ),
@@ -151,13 +137,6 @@ class SignUpPage extends StatelessWidget {
                   separator: '/',
                 ),
               ],
-              // onChanged: (String value) {
-              //   // Converte a string da caixa de texto em uma data
-              //   DateTime data = DateFormat('dd/MM/yyyy').parse(value);
-
-              //   // Converte a data para o formato ISO 8601
-              //   String dataFirestore = DateFormat('yyyy-MM-dd').format(data);
-              // }
             ),
             SizedBox(height: 10),
             // -----------------------------------------------------------------------------------
@@ -276,13 +255,24 @@ class SignUpPage extends StatelessWidget {
 
             //-------------------------------------------------------------------------------
             // carregar imagem teste
+            const Row(
+              children: [
+                Text('Insira abaixo a imagem do documento pessoal: '),
+              ],
+            ),
+            const SizedBox(height: 15),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size.fromHeight(50),
+                shape: LinearBorder.bottom(),
+              ),
               onPressed: () async {
-                //final image = await _userServices.carregaImagem();
                 await _userServices.pickAndUploadImage();
               },
-              child: Text('selecione a imagem do seu doc. pessoal'),
+              child: const Text('selecione aqui'),
             ),
+
+            const SizedBox(height: 15),
 
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -292,18 +282,36 @@ class SignUpPage extends StatelessWidget {
                     minimumSize: const Size.fromHeight(50),
                     shape: LinearBorder.bottom(),
                   ),
+
                   onPressed: () async {
+                    if (_email.text.isEmpty ||
+                        _password.text.isEmpty ||
+                        _nome.text.isEmpty ||
+                        _cpf.text.isEmpty ||
+                        _endereco.text.isEmpty ||
+                        _dtnascimento.text.isEmpty ||
+                        _telefone.text.isEmpty ||
+                        _renda.text.isEmpty ||
+                        _tipoMoradia.text.isEmpty) {
+                      _userServices.showErrorDialog(
+                          context, 'todos os campos devem ser preenchidos');
+                      return;
+                    }
+                    if (_password.text.length < 6) {
+                      debugPrint("senha menor que 6 caracteres");
+                      return;
+                    }
                     if (await _userServices.signUp(
-                        _email.text,
-                        _password.text,
-                        _nome.text,
-                        _cpf.text,
-                        _endereco.text,
-                        _dtnascimento.text,
-                        _telefone.text,
-                        _renda.text,
-                        _tipoMoradia.text,
-                        )) {
+                      _email.text,
+                      _password.text,
+                      _nome.text,
+                      _cpf.text,
+                      _endereco.text,
+                      _dtnascimento.text,
+                      _telefone.text,
+                      _renda.text,
+                      _tipoMoradia.text,
+                    )) {
                       //  await _userServices.salvaImagem(image);
                       Navigator.pop(context);
                     } else {
