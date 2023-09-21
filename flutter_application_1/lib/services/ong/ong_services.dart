@@ -24,8 +24,8 @@ class OngServices {
       String nome, cnpj, endereco, telefone, email) async {
     cadOng.nome = nome;
     cadOng.cnpj = cnpj;
-    cadOng.endereco = endereco;
     cadOng.telefone = telefone;
+    cadOng.endereco = endereco;
     cadOng.email = email;
 
     cadOng.toJson();

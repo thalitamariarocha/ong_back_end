@@ -11,14 +11,12 @@ void main() async {
       appId: "1:301576777279:web:6a0d5cf45ca6a4405e128a",
       messagingSenderId: "301576777279",
       projectId: "miaudota-back");
-  if (kIsWeb) {
-    await Firebase.initializeApp(
-      name: "miaudota-back",
-      options: FirebaseConfig,
-    );
-  } else {
-    await Firebase.initializeApp();
-  }
+  //if (kIsWeb) {
+  await Firebase.initializeApp(
+    name: "miaudota-back-2",
+    options: FirebaseConfig,
+  );
+  // }
 
   runApp(const MyApp());
 }

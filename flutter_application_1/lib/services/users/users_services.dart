@@ -95,7 +95,6 @@ class UserServices {
   }
 
   Future<void> pickAndUploadImage() async {
-    
     Image.memory(webImage);
     ImagePicker picker = ImagePicker();
     XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -125,7 +124,6 @@ class UserServices {
     }
   }
 
-
   void showErrorDialog(BuildContext context, String message) {
     showDialog(
       context: context,
@@ -146,6 +144,4 @@ class UserServices {
       },
     );
   }
-
-  
 }

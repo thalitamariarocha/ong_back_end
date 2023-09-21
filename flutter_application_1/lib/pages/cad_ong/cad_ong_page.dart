@@ -154,65 +154,82 @@ class CadOngPage extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-            Column(
+           
+ Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50),
-                    shape: LinearBorder.bottom(),
-                  ),
-
-                  onPressed: () async {
-                    if (_email.text.isEmpty ||
-                        _cnpj.text.isEmpty ||
-                        _nome.text.isEmpty ||
-                        _endereco.text.isEmpty ||
-                        _telefone.text.isEmpty) {
-                      _services.showErrorDialog(
-                          context, 'todos os campos devem ser preenchidos');
-                      return;
-                    }
-                    if (await _services.cadastrarOng
-                    (_email.text, _cnpj.text,
-                        _nome.text, _endereco.text, _telefone.text)) {
-                      _services.showSuccessDialog(
-                          context, 'cadastro salvo com sucesso!');
-                      //  await _userServices.salvaImagem(image);
-                      //  Navigator.pop(context);
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      //minimumSize: const Size.fromHeight(50),
+                      shape: LinearBorder.bottom(),
+                    ),
+                    onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => MainPage(),
                         ),
                       );
-                    } else {
-                      _services.showErrorDialog(context, 'erro, favor repetir');
-                    }
-                  }, //chamada do signup do user_services (controller)
-                  child: const Text(
-                    "Registrar",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    },
+                    child: const Text(
+                      "Voltar",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      //minimumSize: const Size.fromHeight(50),
+                      shape: LinearBorder.bottom(),
+                    ),
+
+                    onPressed: () async {
+                      if (_email.text.isEmpty ||
+                          _cnpj.text.isEmpty ||
+                          _nome.text.isEmpty ||
+                          _endereco.text.isEmpty ||
+                          _telefone.text.isEmpty) {
+                        _services.showErrorDialog(
+                            context, 'todos os campos devem ser preenchidos');
+                        return;
+                      }
+                      if (await _services.cadastrarOng(_nome.text, _cnpj.text,
+                          _telefone.text, _endereco.text, _email.text)) {
+                        _services.showSuccessDialog(
+                            context, 'cadastro salvo com sucesso!');
+                        //  await _userServices.salvaImagem(image);
+                        //  Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MainPage(),
+                          ),
+                        );
+                      } else {
+                        _services.showErrorDialog(
+                            context, 'erro, favor repetir');
+                      }
+                    }, //chamada do signup do user_services (controller)
+                    child: const Text(
+                      "Registrar",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(
                     top: 15.0,
+                    bottom: 15.0,
                   ),
                   alignment: Alignment.bottomRight,
-                  // child: InkWell(
-                  //   onTap: () {
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //         builder: (context) => MainPage(),
-                  //       ),
-                  //     );
-                  //   },
-                  // ),
                 ),
               ],
             ),
+            SizedBox(height: 15)
           ],
         ),
       ),

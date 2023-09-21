@@ -274,53 +274,79 @@ class SignUpPage extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-            Column(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
+                Expanded(
+                    child:
+                        //botao voltar
+                        ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(50),
                     shape: LinearBorder.bottom(),
                   ),
-
-                  onPressed: () async {
-                    if (_email.text.isEmpty ||
-                        _password.text.isEmpty ||
-                        _nome.text.isEmpty ||
-                        _cpf.text.isEmpty ||
-                        _endereco.text.isEmpty ||
-                        _dtnascimento.text.isEmpty ||
-                        _telefone.text.isEmpty ||
-                        _renda.text.isEmpty ||
-                        _tipoMoradia.text.isEmpty) {
-                      _userServices.showErrorDialog(
-                          context, 'todos os campos devem ser preenchidos');
-                      return;
-                    }
-                    if (_password.text.length < 6) {
-                      debugPrint("senha menor que 6 caracteres");
-                      return;
-                    }
-                    if (await _userServices.signUp(
-                      _email.text,
-                      _password.text,
-                      _nome.text,
-                      _cpf.text,
-                      _endereco.text,
-                      _dtnascimento.text,
-                      _telefone.text,
-                      _renda.text,
-                      _tipoMoradia.text,
-                    )) {
-                      //  await _userServices.salvaImagem(image);
-                      Navigator.pop(context);
-                    } else {
-                      debugPrint("erro, favor repetir");
-                    }
-                  }, //chamada do signup do user_services (controller)
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                    );
+                  },
                   child: const Text(
-                    "Registrar",
+                    "Voltar",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                )),
+                Expanded(
+                  child:
+                      //botao registrar
+                      ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      shape: LinearBorder.bottom(),
+                    ),
+
+                    onPressed: () async {
+                      if (_email.text.isEmpty ||
+                          _password.text.isEmpty ||
+                          _nome.text.isEmpty ||
+                          _cpf.text.isEmpty ||
+                          _endereco.text.isEmpty ||
+                          _dtnascimento.text.isEmpty ||
+                          _telefone.text.isEmpty ||
+                          _renda.text.isEmpty ||
+                          _tipoMoradia.text.isEmpty) {
+                        _userServices.showErrorDialog(
+                            context, 'todos os campos devem ser preenchidos');
+                        return;
+                      }
+                      if (_password.text.length < 6) {
+                        debugPrint("senha menor que 6 caracteres");
+                        return;
+                      }
+                      if (await _userServices.signUp(
+                        _email.text,
+                        _password.text,
+                        _nome.text,
+                        _cpf.text,
+                        _endereco.text,
+                        _dtnascimento.text,
+                        _telefone.text,
+                        _renda.text,
+                        _tipoMoradia.text,
+                      )) {
+                        //  await _userServices.salvaImagem(image);
+                        Navigator.pop(context);
+                      } else {
+                        debugPrint("erro, favor repetir");
+                      }
+                    }, //chamada do signup do user_services (controller)
+                    child: const Text(
+                      "Registrar",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
                   ),
                 ),
                 Container(
