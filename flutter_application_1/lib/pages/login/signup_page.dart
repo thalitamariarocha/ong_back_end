@@ -275,6 +275,7 @@ class SignUpPage extends StatelessWidget {
             const SizedBox(height: 15),
 
             Row(
+              //botao voltar e cadastrar
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
@@ -349,28 +350,29 @@ class SignUpPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.only(
-                    top: 15.0,
-                  ),
-                  alignment: Alignment.bottomRight,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LoginPage(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      "já tem conta? Login",
-                      style: TextStyle(color: Color.fromARGB(255, 61, 6, 112)),
-                    ),
-                  ),
-                ),
               ],
             ),
+            Container(
+              padding: const EdgeInsets.only(
+                top: 15.0,
+              ),
+              alignment: Alignment.bottomRight,
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "já tem conta? Login",
+                  style: TextStyle(color: Color.fromARGB(255, 61, 6, 112)),
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
           ],
         ),
       ),

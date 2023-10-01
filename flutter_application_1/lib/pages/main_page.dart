@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/cad_animals/cad_animals_page.dart';
+import 'package:flutter_application_1/pages/animals/cad_animal_page.dart';
+import 'package:flutter_application_1/pages/animals/list_animal_page.dart';
 import 'package:flutter_application_1/pages/cad_ong/cad_ong_page.dart';
 import 'package:flutter_application_1/pages/cad_voluntario/cad_Voluntario_page.dart';
 import 'package:flutter_application_1/pages/login/login_page.dart';
@@ -53,7 +54,7 @@ class _MainPageState extends State<MainPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const CadAnimalsPage(),
+                            builder: (context) => CadAnimalPage(),
                           ),
                         );
                       },
@@ -88,7 +89,7 @@ class _MainPageState extends State<MainPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const UserProfilePage(),
+                        builder: (context) => ListAnimalPage(),
                       ),
                     );
                   },

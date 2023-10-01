@@ -1,43 +1,49 @@
-// class Animal {
-//   String? id; //
-//   String? especie;//
-//   String? sexo;//
-//   String? porte;//
-//   String? dtNascimento; //
-//   String? nome; //
-//   String? vacina;//
-//   String? castrado;//
-//   String? observacao;//
-//   //String? tipoMoradia;
-//   String? image;//
+class Animal {
+  String? id; //
+  String? especie; //ok
+  String? sexo; //ok
+  String? porte; //ok
+  String? dtNascimento; //ok
+  String? nome; //ok
+  String? vacina; //
+  String? castrado; //ok
+  String? observacao; //ok
+  String? image; //ok
+  String? vinculoOng;
 
-//   //construtor
-//   Animal(
-//       {this.id,
-//       this.email,
-//       this.senha,
-//       this.cpf,
-//       this.dtNascimento,
-//       this.nome,
-//       this.telefone,
-//       this.endereco,
-//       this.renda,
-//       this.tipoMoradia,
-//       this.image});
+  //construtor
+  Animal(
+      {this.id,
+      this.especie,
+      this.sexo,
+      this.porte,
+      this.dtNascimento,
+      this.nome,
+      this.vacina,
+      this.castrado,
+      this.observacao,
+      this.image,
+      this.vinculoOng});
 
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'id': id,
-//       'email': email,
-//       'senha': senha,
-//       'cpf': cpf,
-//       'dtNascimento': dtNascimento,
-//       'nome': nome,
-//       'telefone': telefone,
-//       'endereco': endereco,
-//       'renda': renda,
-//       'tipoMoradia': tipoMoradia,
-//       'image': image,
-//     };
-//   }
-// }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'especie': especie,
+      'sexo': sexo,
+      'porte': porte,
+      'dtNascimento': dtNascimento,
+      'nome': nome,
+      'vacina': vacina,
+      'castrado': castrado,
+      'observacao': observacao,
+      'image': image,
+      'vinculoOng': vinculoOng,
+    };
+  }
+
+  Map<String, dynamic> toJsonid() {
+    return {
+      'id': id,
+    };
+  }
+}

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/usuarios/voluntario.dart';
+import 'package:flutter_application_1/pages/main_page.dart';
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -15,7 +16,7 @@ class VoluntarioServices {
 
 // registrar o usuario no firebase
   Future<bool> signUp(String email, String senha, nome, cpf, endereco,
-      dtNascimento, telefone, renda, selectedProfile) async {
+      dtNascimento, telefone, renda, selectedProfile, selectedName) async {
     try {
       User? user = (await _firebaseAuth.createUserWithEmailAndPassword(
               email: email, password: senha))
@@ -30,7 +31,7 @@ class VoluntarioServices {
       cadVoluntario.tipoUsuario = selectedProfile;
       cadVoluntario.email = email;
       cadVoluntario.senha = senha;
-
+      cadVoluntario.vinculoOng = selectedName;
       await saveUser(user.uid);
 
       return Future.value(true);
@@ -38,15 +39,6 @@ class VoluntarioServices {
       if (e.code == 'invalid-email') {
         debugPrint('email inválido');
       } else if (e.code == 'email-already-in-use') {
-        //showErrorDialog(context, message)
-        //   Fluttertoast.showToast(
-        //   msg: "Já existe cadastro com esse e-mail",
-        //   toastLength: Toast.LENGTH_SHORT, // Duração da mensagem (SHORT ou LONG)
-        //   gravity: ToastGravity.CENTER, // Posição da mensagem na tela
-        //   backgroundColor: Color.fromARGB(255, 126, 122, 122),
-        //   textColor: Color.fromARGB(255, 0, 0, 0),
-        // );
-        
         debugPrint('já existe cadastro com esse e-mail');
       } else {
         debugPrint(e.code);
@@ -124,7 +116,12 @@ class VoluntarioServices {
             TextButton(
               onPressed: () {
                 // Fechar o diálogo quando o botão "OK" for pressionado
-                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MainPage(),
+                  ),
+                );
               },
               child: Text('OK'),
             ),
@@ -132,5 +129,21 @@ class VoluntarioServices {
         );
       },
     );
+  }
+
+  late String selectedName = '';
+
+  Future<List<String>> loadNamesFromFirebase() async {
+    final QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('ong').get();
+    final List<String> names = querySnapshot.docs
+        .map((QueryDocumentSnapshot documentSnapshot) =>
+            documentSnapshot['nome'] as String)
+        .toList();
+
+    if (!names.isEmpty && selectedName.isEmpty) {
+      selectedName = names[0];
+    }
+    return names;
   }
 }

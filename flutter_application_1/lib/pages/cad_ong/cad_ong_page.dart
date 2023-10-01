@@ -200,8 +200,6 @@ class CadOngPage extends StatelessWidget {
                           _telefone.text, _endereco.text, _email.text)) {
                         _services.showSuccessDialog(
                             context, 'cadastro salvo com sucesso!');
-                        //  await _userServices.salvaImagem(image);
-                        //  Navigator.pop(context);
                         Navigator.push(
                           context,
                           MaterialPageRoute(

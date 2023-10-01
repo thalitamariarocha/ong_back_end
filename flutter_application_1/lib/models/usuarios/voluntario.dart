@@ -8,18 +8,21 @@ class Voluntario {
   String? telefone;
   String? endereco;
   String? tipoUsuario;
+  String? vinculoOng;
 
   //construtor
-  Voluntario(
-      {this.id,
-      this.email,
-      this.senha,
-      this.cpf,
-      this.dtNascimento,
-      this.nome,
-      this.telefone,
-      this.endereco,
-      this.tipoUsuario});
+  Voluntario({
+    this.id,
+    this.email,
+    this.senha,
+    this.cpf,
+    this.dtNascimento,
+    this.nome,
+    this.telefone,
+    this.endereco,
+    this.tipoUsuario,
+    this.vinculoOng,
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -32,6 +35,7 @@ class Voluntario {
       'telefone': telefone,
       'endereco': endereco,
       'tipoUsuario': tipoUsuario,
+      'vinculoOng': vinculoOng,
     };
   }
 }
