@@ -426,6 +426,7 @@ class _CadVoluntarioPageState extends State<CadAnimalPage> {
                         selectedCastrado,
                         _obsevacao.text,
                         _animalServices.selectedOng,
+                        _animalServices.webImage,
                       )) {
                         // ignore: use_build_context_synchronously
                         _animalServices.showSuccessDialog(

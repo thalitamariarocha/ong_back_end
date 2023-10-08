@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/animals/cad_animal_page.dart';
 import 'package:flutter_application_1/pages/animals/list_animal_page.dart';
@@ -5,9 +8,11 @@ import 'package:flutter_application_1/pages/cad_ong/cad_ong_page.dart';
 import 'package:flutter_application_1/pages/cad_voluntario/cad_Voluntario_page.dart';
 import 'package:flutter_application_1/pages/login/login_page.dart';
 import 'package:flutter_application_1/pages/user_profile/user_profile_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/services/animal/animal_services.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  MainPage({Key? key});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -15,9 +20,16 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _index = 0; //variavel que vai calcular a posicao do index automatico
+  AnimalServices animalServices = AnimalServices();
+  teste() async {
+    bool validador = await _isAdmin();
+    return validador;
+  }
+
+  // _MainPageState();
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
         child: Column(
@@ -28,6 +40,16 @@ class _MainPageState extends State<MainPage> {
                   Flexible(
                     flex: 1,
                     child: Image.asset('assets/images/Untitled.png'),
+                  ),
+                  const Flexible(
+                    flex: 1,
+                    child: Text(
+                      'Bem vindo',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -72,35 +94,53 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ],
                 ),
-                ListTile(
-                  title: const Text("Aprovar"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const UserProfilePage(),
-                      ),
-                    );
-                  },
+                Column(
+                  children: [
+                    ListTile(
+                      title: const Text("Aprovar Cadastro"),
+                      // enabled: await _isAdmin(),
+                      onTap: () async {
+                        if (await _isAdmin() == true) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const UserProfilePage(),
+                            ),
+                          );
+                        } else if (await _isAdmin() == false) {
+                          animalServices.showErrorDialog(context,
+                              'Permissão Negada! Você não é administrador.');
+                        }
+                      },
+                    ),
+                    ListTile(
+                      title: const Text("Aprovar Adoção"),
+                      //enabled:  await _isAdmin(),
+                      onTap: () async {
+                        if (await _isAdmin() == true) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const UserProfilePage(),
+                            ),
+                          );
+                        } else if (await _isAdmin() == false) {
+                          animalServices.showErrorDialog(context,
+                              'Permissão Negada! Você não é administrador.');
+                        }
+                      },
+                    ),
+                  ],
                 ),
                 ListTile(
-                  title: const Text("Animais"),
+                  title: const Text("Animais Disponíveis"),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ListAnimalPage(),
-                      ),
-                    );
-                  },
-                ),
-                ListTile(
-                  title: const Text("Home"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MainPage(),
+                        builder: (context) => ListAnimalPage(
+                          imageUrl: '',
+                        ),
                       ),
                     );
                   },
@@ -145,5 +185,67 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
     );
+  }
+
+  thalita09() async {
+    //if (_isAdmin() == true) {
+    // if (_isAdmin != null && isAdmin)
+    return const ExpansionTile(
+      title: Text("Aprovar"),
+      children: [
+        ListTile(
+          title: const Text("Cadastro"),
+          // onTap: () {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => const UserProfilePage(),
+          //     ),
+          //   );
+          // },
+        ),
+        ListTile(
+          title: const Text("Adoção"),
+          // onTap: () {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => const UserProfilePage(),
+          //     ),
+          //   );
+          // },
+        ),
+      ],
+    );
+  }
+}
+
+Future<bool> _isAdmin() async {
+  // Obtém o usuário logado
+  User user = FirebaseAuth.instance.currentUser!;
+
+  if (user == null) {
+    return false;
+  }
+// Obtém o id do usuário
+  String uid = user.uid;
+
+  // Procura o usuário no Firestore
+  QuerySnapshot snapshot = await FirebaseFirestore.instance
+      .collection('voluntario')
+      .where('id', isEqualTo: uid)
+      .get();
+
+  if (snapshot.docs.isEmpty) {
+    return false;
+  }
+
+  Map<String, dynamic> userData =
+      snapshot.docs.first.data() as Map<String, dynamic>;
+  String tipoUsuario = userData['tipoUsuario'];
+  if (tipoUsuario == 'Administrador') {
+    return true;
+  } else {
+    return false;
   }
 }

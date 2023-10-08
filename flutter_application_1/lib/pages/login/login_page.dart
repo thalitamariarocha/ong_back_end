@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/home/home_page.dart';
 import 'package:flutter_application_1/pages/login/signup_page.dart';
@@ -88,11 +90,12 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () async {
                     if (await _userServices.signIn(
                         _email.text, _password.text)) {
-                      // ignore: use_build_context_synchronously
+                  
+                    //  bool isAdmin = await _isAdmin();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const MainPage(),
+                            builder: (context) => MainPage(),
                           ));
                     }
                   },
@@ -131,4 +134,39 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+   Future<bool> _isAdmin() async {
+    // Obtém o usuário logado
+    User user = FirebaseAuth.instance.currentUser!;
+
+    if (user == null) {
+      return false;
+    }
+// Obtém o id do usuário
+    String uid = user.uid;
+
+    // Procura o usuário no Firestore
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('voluntario')
+        .where('id', isEqualTo: uid)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      Map<String, dynamic> userData =
+          snapshot.docs.first.data() as Map<String, dynamic>;
+      String tipoUsuario = userData['tipoUsuario'];
+      if (tipoUsuario == 'Administrador') {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+
+
+
+
 }

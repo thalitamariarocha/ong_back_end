@@ -37,8 +37,6 @@ class _CadVoluntarioPageState extends State<CadVoluntarioPage> {
   @override
   void initState() {
     super.initState();
-
-    //_names = _loadNamesFromFirebase();
   }
 
   @override
@@ -358,7 +356,7 @@ class _CadVoluntarioPageState extends State<CadVoluntarioPage> {
                         _voluntarioServices.selectedName,
                       )) {
                         _voluntarioServices.showSuccessDialog(
-                            context, 'cadastro salvo com sucesso!');                        
+                            context, 'cadastro salvo com sucesso!');
                       } else {
                         _voluntarioServices.showErrorDialog(
                             context, 'erro, favor repetir');

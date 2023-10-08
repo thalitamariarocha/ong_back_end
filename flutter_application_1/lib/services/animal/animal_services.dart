@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/models/animal/animal.dart';
 import 'dart:io';
@@ -15,11 +17,45 @@ import 'package:image_picker_web/image_picker_web.dart';
 class AnimalServices {
   late String idParaImagem;
   Uint8List webImage = Uint8List(8);
+  //File webImage2 = File('');
+
   FirebaseStorage storage = FirebaseStorage.instance;
   Animal cadAnimal = Animal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  CollectionReference get _collectionRef => _firestore.collection('animal');
 
   //essa função abaixo é para a listagem dos animais
+
+  // Future<List<Animal>> getAnimals() async {
+  //   List<Animal> animals = [];
+
+  //   final QuerySnapshot snapshot = await _firestore.collection('animal').get();
+
+  //   for (final DocumentSnapshot doc in snapshot.docs) {
+  //     final String name = doc['nome'];
+  //     final String imageName = doc.id;
+
+  //     final Uint8List imageBytes = await _getImageBytes(imageName);
+
+  //     animals.add(Animal(nome: name, image: imageBytes));
+  //   }
+
+  //   return animals;
+  // }
+
+  // Future<Uint8List> _getImageBytes(String imageName) async {
+  //   final Reference ref = storage.ref().child(imageName);
+  //   final FullMetadata metadata = await ref.getMetadata();
+  //   final int size = metadata.sizeBytes;
+
+  //   final Uint8List data = Uint8List(size);
+  //   await ref.getData().then((value) {
+  //     data.setAll(0, value);
+  //   });
+
+  //   return data;
+  // }
+
   Future<List<Animal>> getAnimalsFromFirestore() async {
     List<Animal> animals = [];
     final QuerySnapshot snapshot =
@@ -58,16 +94,17 @@ class AnimalServices {
     Image.memory(webImage);
     ImagePicker picker = ImagePicker();
     XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    //webImage2 = File(image!.path);
     if (image != null) {
       var imageSelected = await image.readAsBytes();
-      webImage = imageSelected as Uint8List;
+      webImage = imageSelected;
     } else {
       debugPrint('Nenhuma imagem selecionada.');
     }
   }
 
   Future<bool> cadastrarAnimal(String especie, sexo, porte, dtnascimento, nome,
-      vacina, castrado, observacao, vinculoOng) async {
+      vacina, castrado, observacao, vinculoOng, dynamic imageFile) async {
     cadAnimal.especie = especie;
     cadAnimal.sexo = sexo;
     cadAnimal.porte = porte;
@@ -76,7 +113,6 @@ class AnimalServices {
     cadAnimal.vacina = vacina;
     cadAnimal.castrado = castrado;
     cadAnimal.observacao = observacao;
-    //cadAnimal.image = webImage;
     cadAnimal.vinculoOng = selectedOng;
     cadAnimal.toJson();
 
@@ -97,11 +133,47 @@ class AnimalServices {
 
       await userDocRef.update(cadAnimal.toJsonid());
 
+      Reference ref = storage.ref().child('animal').child(userDocRef.id);
+      UploadTask task = ref.putData(
+        imageFile,
+        SettableMetadata(
+          contentType: 'image/jpg',
+        ),
+      );
+      //SettableMetadata(contentType: 'image/jpeg');
+      String url = await (await task.whenComplete(() {})).ref.getDownloadURL();
+      DocumentReference docRef = _collectionRef.doc(userDocRef.id);
+      await docRef.update({'image': url});
+
       //uploadImageToFirebase(animal: cadAnimal, imageFile: webImage);
 
-      final UploadTask task;
-      task = storage.ref().child(userDocRef.id).putData(webImage);
-      SettableMetadata(contentType: 'image/jpeg');
+      //   final Reference ref;
+      //   //task = storage.ref().child(userDocRef.id).putData(webImage);
+      //   ref = storage.ref().child('animal').child(userDocRef.id);
+      //   UploadTask task;
+      //    task = ref.child(userDocRef.id).putFile(
+      //           imageFile,
+      //           SettableMetadata(
+      //             contentType: 'image/jpg',
+      //             customMetadata: {
+      //               'upload by': 'teste',
+      //               'description': 'Informação de arquivo',
+      //               'imageName': imageFile
+      //             },
+      //           ),
+      //         );
+      //   //SettableMetadata(contentType: 'image/jpeg');
+      //   String url = await (await task.whenComplete(() {})).ref.getDownloadURL();
+      //   DocumentReference docRef = _collectionRef.doc(users!.id);
+      //   await docRef.update({'image': url});
+      // } on FirebaseException catch (e) {
+      //   if (e.code != 'OK') {
+      //     debugPrint('Problemas ao gravar dados');
+      //   } else if (e.code == 'ABORTED') {
+      //     debugPrint('Inclusão de dados abortada');
+      //   }
+      //   return Future.value(false);
+      // }
 
       print('Dados salvos com sucesso.');
     } catch (e) {
@@ -109,6 +181,24 @@ class AnimalServices {
     }
     return Future.value(true);
   }
+
+  uploadImageToFirebase({required imageFile}) async {}
+
+//   void updateImageVariable(Uint8List imageBytes) async {
+//   // Codificar o Uint8List em uma representação de string (base64)
+//   String imageBase64 = base64Encode(imageBytes);
+
+//   // Referência ao documento onde você deseja atualizar a variável
+//   DocumentReference docRef = FirebaseFirestore.instance.collection('animal').doc(userDocRef.id.id);
+
+//   try {
+//     // Atualizar a variável 'image' com a representação de string da imagem
+//     await docRef.update(cadAnimal.toJsonimage(imageBase64));
+//     print('Imagem atualizada no Firebase Firestore com sucesso.');
+//   } catch (error) {
+//     print('Erro ao atualizar a imagem no Firebase Firestore: $error');
+//   }
+// }
 
   void showSuccessDialog(BuildContext context, String message) {
     showDialog(

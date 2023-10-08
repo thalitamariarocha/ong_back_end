@@ -1,3 +1,7 @@
+import 'dart:typed_data';
+
+import 'package:firebase_storage/firebase_storage.dart';
+
 class Animal {
   String? id; //
   String? especie; //ok
@@ -46,4 +50,20 @@ class Animal {
       'id': id,
     };
   }
+
+   Map<String, dynamic> toJsonimage(image) {
+    return {
+      'image': image,
+    };
+  }
+
+
+  // Future<void> loadImage() async {
+  //   final imageRef = FirebaseStorage.instance.ref(id);
+  //   final imageData = await imageRef.getData();
+  //   this.image = imageData;
+  // }
+  
 }
+
+

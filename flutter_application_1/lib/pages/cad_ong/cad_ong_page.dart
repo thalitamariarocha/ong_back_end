@@ -154,8 +154,7 @@ class CadOngPage extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-           
- Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
