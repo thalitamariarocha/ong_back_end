@@ -94,6 +94,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ],
                 ),
+                //--------------------------------acesso admin-------------------
                 Column(
                   children: [
                     ListTile(
@@ -132,15 +133,14 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ],
                 ),
+                //--------------------------------fim acesso admin-------------------
                 ListTile(
                   title: const Text("Animais Disponíveis"),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ListAnimalPage(
-                          imageUrl: '',
-                        ),
+                        builder: (context) => const ListAnimalPage(),
                       ),
                     );
                   },
