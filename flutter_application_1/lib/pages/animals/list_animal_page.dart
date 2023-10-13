@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/animals/details_animal_page.dart';
 import 'package:flutter_application_1/pages/main_page.dart';
 import 'package:flutter_application_1/services/animal/animal_services.dart';
 
@@ -86,28 +87,24 @@ class _ProductListPageState extends State<ListAnimalPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => MainPage(),
-                                      ),
+                                          builder: (context) => MainPage()
+
+                                          // DetailsAnimalPage(
+                                          //   animalId: docSnapshot.id,
+                                          // ),
+                                          ),
                                     );
                                   },
                                   child: Row(
                                     children: [
-                                      // SizedBox(
-                                      //   height: 50,
-                                      //   width: 50,
-                                      //   child: AspectRatio(
-                                      //     aspectRatio: 1,
-                                      //     //first determina a apresentação da primeira imagem do array
-                                      //     child:
-                                      //         Image.network(docSnapshot['image']),
-                                      //   ),
-                                      // ),
                                       SizedBox(
                                         height: 80,
                                         width: 80,
-                                        // child: Image.network(cartProduct.product.images.first),
                                         child: Image.network(
-                                          docSnapshot['image'].toString() ?? '',
+                                          docSnapshot['image'],
+                                          width: 200,
+                                          height: 200,
+                                          fit: BoxFit.cover,
                                           errorBuilder: (BuildContext context,
                                               Object exception,
                                               StackTrace? stackTrace) {
@@ -125,32 +122,40 @@ class _ProductListPageState extends State<ListAnimalPage> {
                                       ),
                                       SizedBox(
                                         width: 216,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 18.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Text(
-                                                docSnapshot['nome'],
-                                                style: const TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(
+                                              docSnapshot['nome'],
+                                              style: const TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                              Text(
-                                                docSnapshot['especie'],
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                ),
+                                            ),
+                                            Text(
+                                              docSnapshot['especie'],
+                                              style: const TextStyle(
+                                                fontSize: 16,
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
+                                        //),
                                       ),
+                                      // ElevatedButton(
+                                      //   style: ElevatedButton.styleFrom(
+                                      //     alignment: Alignment.centerRight,
+
+                                      //     //shape: LinearBorder.bottom(),
+                                      //   ),
+                                      //   onPressed: () async {
+                                      //     // await ;
+                                      //   },
+                                      //   child: const Text('quero adotar'),
+                                      // ),
                                       // IconButton(
                                       //   iconSize: 18,
                                       //   onPressed: () {},

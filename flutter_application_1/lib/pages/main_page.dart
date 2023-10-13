@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/animals/cad_animal_page.dart';
 import 'package:flutter_application_1/pages/animals/list_animal_page.dart';
+import 'package:flutter_application_1/pages/aprovacao/aprov_cadastro.dart';
+import 'package:flutter_application_1/pages/aprovacao/historico_cadastro.dart';
 import 'package:flutter_application_1/pages/cad_ong/cad_ong_page.dart';
 import 'package:flutter_application_1/pages/cad_voluntario/cad_Voluntario_page.dart';
 import 'package:flutter_application_1/pages/login/login_page.dart';
@@ -105,7 +107,24 @@ class _MainPageState extends State<MainPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const UserProfilePage(),
+                              builder: (context) => AprovarCadastro(),
+                            ),
+                          );
+                        } else if (await _isAdmin() == false) {
+                          animalServices.showErrorDialog(context,
+                              'Permissão Negada! Você não é administrador.');
+                        }
+                      },
+                    ),
+                    ListTile(
+                      title: const Text("Histórico de Cadastro"),
+                      //enabled:  await _isAdmin(),
+                      onTap: () async {
+                        if (await _isAdmin() == true) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HistoricoCadastro(),
                             ),
                           );
                         } else if (await _isAdmin() == false) {
@@ -184,38 +203,6 @@ class _MainPageState extends State<MainPage> {
           child: Image.asset('assets/images/Untitled.png'),
         ),
       ),
-    );
-  }
-
-  thalita09() async {
-    //if (_isAdmin() == true) {
-    // if (_isAdmin != null && isAdmin)
-    return const ExpansionTile(
-      title: Text("Aprovar"),
-      children: [
-        ListTile(
-          title: const Text("Cadastro"),
-          // onTap: () {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => const UserProfilePage(),
-          //     ),
-          //   );
-          // },
-        ),
-        ListTile(
-          title: const Text("Adoção"),
-          // onTap: () {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => const UserProfilePage(),
-          //     ),
-          //   );
-          // },
-        ),
-      ],
     );
   }
 }

@@ -10,6 +10,7 @@ class Adotante {
   String? renda;
   String? tipoMoradia;
   String? image;
+  String aprovado = "pendente";
 
   //construtor
   Adotante(
@@ -23,7 +24,8 @@ class Adotante {
       this.endereco,
       this.renda,
       this.tipoMoradia,
-      this.image});
+      this.image,
+      this.aprovado = "pendente"});
 
   Map<String, dynamic> toJson() {
     return {
@@ -38,6 +40,7 @@ class Adotante {
       'renda': renda,
       'tipoMoradia': tipoMoradia,
       'image': image,
+      'aprovado': aprovado
     };
   }
 }

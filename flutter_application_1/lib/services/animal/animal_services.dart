@@ -32,21 +32,12 @@ class AnimalServices {
     return _collectionRef.snapshots();
   }
 
-  // Future<List<Animal>> getAnimalsFromFirestore() async {
-  //   List<Animal> animals = [];
-  //   final QuerySnapshot snapshot =
-  //       await FirebaseFirestore.instance.collection('animal').get();
+ //-------------------------------------------------------------------------------
 
-  //   for (final DocumentSnapshot doc in snapshot.docs) {
-  //     final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-  //     final animal = Animal(
-  //       nome: data['nome'],
-  //       image: data['image'],
-  //     );
-  //     animals.add(animal);
-  //   }
-  //   return animals;
-  // }
+ 
+
+
+ //-------------------------------------------------------------------------------
 
   //a partir daqui são funções para o cadastro de animais
 
@@ -127,7 +118,7 @@ class AnimalServices {
     return Future.value(true);
   }
 
-  uploadImageToFirebase({required imageFile}) async {}
+  //uploadImageToFirebase({required imageFile}) async {}
 
   void showSuccessDialog(BuildContext context, String message) {
     showDialog(
