@@ -89,14 +89,15 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   onPressed: () async {
                     if (await _userServices.signIn(
-                        _email.text, _password.text)) {
-                  
-                    //  bool isAdmin = await _isAdmin();
+                        _email.text, _password.text) == true) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => MainPage(),
                           ));
+                    }
+                    else{
+                      _userServices.showErrorDialog(context, "Sem Acesso. Aguarde Aprovação	do cadastro.");
                     }
                   },
                   child: const Text(
@@ -135,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-   Future<bool> _isAdmin() async {
+  Future<bool> _isAdmin() async {
     // Obtém o usuário logado
     User user = FirebaseAuth.instance.currentUser!;
 
@@ -164,6 +165,8 @@ class _LoginPageState extends State<LoginPage> {
       return false;
     }
   }
+
+ 
 
 
 

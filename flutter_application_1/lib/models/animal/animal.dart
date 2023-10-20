@@ -14,20 +14,23 @@ class Animal {
   String? observacao; //ok
   String? image; //ok
   String? vinculoOng;
+  String? adotado = "false";
 
   //construtor
-  Animal(
-      {this.id,
-      this.especie,
-      this.sexo,
-      this.porte,
-      this.dtNascimento,
-      this.nome,
-      this.vacina,
-      this.castrado,
-      this.observacao,
-      this.image,
-      this.vinculoOng});
+  Animal({
+    this.id,
+    this.especie,
+    this.sexo,
+    this.porte,
+    this.dtNascimento,
+    this.nome,
+    this.vacina,
+    this.castrado,
+    this.observacao,
+    this.image,
+    this.vinculoOng,
+    this.adotado,
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -42,6 +45,7 @@ class Animal {
       'observacao': observacao,
       'image': image,
       'vinculoOng': vinculoOng,
+      'adotado': adotado,
     };
   }
 
@@ -51,19 +55,9 @@ class Animal {
     };
   }
 
-   Map<String, dynamic> toJsonimage(image) {
+  Map<String, dynamic> toJsonimage(image) {
     return {
       'image': image,
     };
   }
-
-
-  // Future<void> loadImage() async {
-  //   final imageRef = FirebaseStorage.instance.ref(id);
-  //   final imageData = await imageRef.getData();
-  //   this.image = imageData;
-  // }
-  
 }
-
-

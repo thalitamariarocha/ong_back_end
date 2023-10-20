@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application_1/models/adocao/adocao.dart';
+import 'package:flutter_application_1/models/animal/animal.dart';
 import 'package:flutter_application_1/models/usuarios/adotante.dart';
-import 'package:flutter_application_1/pages/aprovacao/details_adotante_page.dart';
 import 'package:flutter_application_1/pages/main_page.dart';
-import 'package:flutter_application_1/services/users/users_services.dart';
+import 'package:flutter_application_1/services/adocao/adocao_services.dart';
 
-class AprovarCadastro extends StatefulWidget {
-  const AprovarCadastro({super.key});
+class AprovarAdocao extends StatefulWidget {
+  const AprovarAdocao({super.key});
 
   @override
-  State<AprovarCadastro> createState() => _AprovarCadastroState();
+  State<AprovarAdocao> createState() => _AprovarAdocaoState();
 }
 
-class _AprovarCadastroState extends State<AprovarCadastro> {
-  UserServices adotanteServices = UserServices();
+class _AprovarAdocaoState extends State<AprovarAdocao> {
+  //AnimalServices animalServices = AnimalServices();
+  //UserServices adotanteServices = UserServices();
+  AdocaoServices adocaoServices = AdocaoServices();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Aprovação de Adotantes'),
+        title: const Text('Aprovação de Adoção'),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 245, 210, 15),
         leading: IconButton(
@@ -44,7 +47,7 @@ class _AprovarCadastroState extends State<AprovarCadastro> {
               height: 25,
             ),
             const Text(
-              "Cadastros Pendentes",
+              "Adoções Pendentes",
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -55,8 +58,8 @@ class _AprovarCadastroState extends State<AprovarCadastro> {
               height: 25,
             ),
             StreamBuilder(
-              stream: adotanteServices.getAllAdotante(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              stream: adocaoServices.getAllAdocao(),
+              builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Center(
                     child: Text(
@@ -82,31 +85,37 @@ class _AprovarCadastroState extends State<AprovarCadastro> {
 
                         // Verificar se o campo 'nome' e 'cpf' existe no documento antes de acessá-los
                         if (docSnapshot.data() != null &&
-                            docSnapshot["aprovado"] == "pendente") {
-                          String nome = docSnapshot['nome'];
-                          String cpf = docSnapshot['cpf'];
-                          String img = '';
-                          try {
-                            img = docSnapshot['image'].toString();
-                          } catch (e) {
-                            img = '';
-                          }
+                            docSnapshot["status"] == "pendente") {
+                          String dtAdocao = docSnapshot['dataDeAdocao'];
+                          String nome = docSnapshot['adotante']['nome'];
+
+                          Animal animal = Animal(
+                              id: docSnapshot['animal']['id'],
+                              nome: docSnapshot['animal']['nome'],
+                              especie: docSnapshot['animal']['especie'],
+                              // dtNascimento:
+                              //     docSnapshot['animal']['dtNascimento'],
+                              sexo: docSnapshot['animal']['sexo'],
+                              porte: docSnapshot['animal']['porte'],
+                              castrado: docSnapshot['animal']['castrado']);
 
                           Adotante adotante = Adotante(
-                            id: docSnapshot['id'],
-                            nome: nome,
-                            cpf: cpf,
-                            dtNascimento: docSnapshot['dtNascimento'],
-                            email: docSnapshot['email'],
-                            telefone: docSnapshot['telefone'],
-                            endereco: docSnapshot['endereco'],
-                            renda: docSnapshot['renda'],
-                            tipoMoradia: docSnapshot['tipoMoradia'],
-                            image: img,
-                            aprovado: docSnapshot['aprovado'],
+                              id: docSnapshot['adotante']['id'],
+                              nome: docSnapshot['adotante']['nome'],
+                              cpf: docSnapshot['adotante']['cpf'],
+                              email: docSnapshot['adotante']['email'],
+                              telefone: docSnapshot['adotante']['telefone'],
+                              endereco: docSnapshot['adotante']['endereco'],
+                              renda: docSnapshot['adotante']['renda'],
+                              tipoMoradia: docSnapshot['adotante']
+                                  ['tipoMoradia']);
 
-                            // Adicione os outros campos necessários aqui
-                          );
+                          Adocao adocao = Adocao(
+                              id: docSnapshot['id'],
+                              status: docSnapshot['status'],
+                              dataDeAdocao: docSnapshot['dataDeAdocao'],
+                              animal: animal,
+                              adotante: adotante);
 
                           return Padding(
                             padding: const EdgeInsets.only(
@@ -126,15 +135,16 @@ class _AprovarCadastroState extends State<AprovarCadastro> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text("Nome: $nome"),
-                                              Text("CPF: $cpf"),
+                                              Text("Data: $dtAdocao"),
+                                              Text("Adotante: $nome"),
+                                              //Text("Animal: ${adocao.animal}"),
                                             ],
                                           ),
                                         ),
                                         ElevatedButton(
                                           onPressed: () async {
-                                            await redirectToPageWithParam(
-                                                adotante, context);
+                                            // await redirectToPageWithParam(
+                                            //     adocao, context);
                                           },
                                           child: const Text('detalhar'),
                                         ),
@@ -167,14 +177,14 @@ class _AprovarCadastroState extends State<AprovarCadastro> {
     );
   }
 
-  redirectToPageWithParam(Adotante adotante, BuildContext context) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AdotanteDetailPage(
-          adotante: adotante,
-        ),
-      ),
-    );
-  }
+  // redirectToPageWithParam(Adocao adocao, BuildContext context) async {
+  //   await Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => AdotanteDetailPage(
+  //         adotante: adotante,
+  //       ),
+  //     ),
+  //   );
+  // }
 }

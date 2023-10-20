@@ -80,7 +80,20 @@ class UserServices {
       (await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password));
 
-      return Future.value(true);
+      String uuid = FirebaseAuth.instance.currentUser!.uid;
+      DocumentSnapshot snapshot =
+          await _firestore.collection('adotante').doc(uuid).get();
+      if (snapshot.exists) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        String aprovado = data['aprovado'];
+        if (aprovado == "aprovado") {
+          return Future.value(true);
+        } else {
+          return Future.value(false);
+        }
+      } else {
+        return Future.value(true);
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         debugPrint('email inválido');
@@ -167,6 +180,10 @@ class UserServices {
         );
       },
     );
+  }
+
+  Future<bool> isAprovado() async {
+    return Future.value(true);
   }
 
   //-------------------a patir daqui é o código para aprovar cadastro-------------------

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/animals/cad_animal_page.dart';
 import 'package:flutter_application_1/pages/animals/list_animal_page.dart';
+import 'package:flutter_application_1/pages/aprovacao/aprov_adocao_page.dart';
 import 'package:flutter_application_1/pages/aprovacao/aprov_cadastro.dart';
 import 'package:flutter_application_1/pages/aprovacao/historico_cadastro.dart';
 import 'package:flutter_application_1/pages/cad_ong/cad_ong_page.dart';
@@ -141,7 +142,7 @@ class _MainPageState extends State<MainPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const UserProfilePage(),
+                              builder: (context) => const AprovarAdocao(),
                             ),
                           );
                         } else if (await _isAdmin() == false) {

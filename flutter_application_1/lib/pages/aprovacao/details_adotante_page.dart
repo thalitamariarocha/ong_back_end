@@ -23,6 +23,7 @@ class _AdotanteDetailPageState extends State<AdotanteDetailPage> {
         backgroundColor: Colors.amber, // Cor do app bar
         title: Text("Detalhes do Adotante"),
         centerTitle: true,
+        
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(8.0),
