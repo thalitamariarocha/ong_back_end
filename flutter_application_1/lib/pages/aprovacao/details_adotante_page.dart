@@ -132,12 +132,12 @@ class _AdotanteDetailPageState extends State<AdotanteDetailPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    // style: ElevatedButton.styleFrom(
-                    //   primary: Colors.red,
+                     style: ElevatedButton.styleFrom(
+                       primary: Colors.red,
                     //   shape: RoundedRectangleBorder(
                     //   borderRadius: BorderRadius.circular(20),
                     //   ),
-                    // ),
+                     ),
                     onPressed: () {
                       adotanteServices
                           .reprovarAdotante(widget.adotante.id.toString());
@@ -153,17 +153,17 @@ class _AdotanteDetailPageState extends State<AdotanteDetailPage> {
                     child: const Text(
                       "Reprovar Cadastro",
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black),
                     ),
                   ),
                   SizedBox(width: 16),
                   ElevatedButton(
-                    // style: ElevatedButton.styleFrom(
-                    //   primary: Colors.green,
+                     style: ElevatedButton.styleFrom(
+                       primary: Colors.green,
                     // shape: RoundedRectangleBorder(
                     //   borderRadius: BorderRadius.circular(20),
                     // ),
-                    //),
+                    ),
                     onPressed: () {
                       adotanteServices
                           .aprovarAdotante(widget.adotante.id.toString());
@@ -181,7 +181,7 @@ class _AdotanteDetailPageState extends State<AdotanteDetailPage> {
                     child: const Text(
                       "Aprovar Cadastro",
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black),
                     ),
                   ),
                 ],

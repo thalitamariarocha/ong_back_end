@@ -7,7 +7,8 @@ import 'package:flutter_application_1/pages/main_page.dart';
 
 class AdocaoServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  CollectionReference get _collectionRef => _firestore.collection('animal_adocao');
+  CollectionReference get _collectionRef =>
+      _firestore.collection('animal_adocao');
   CollectionReference get _collectionAnimal => _firestore.collection('animal');
   CollectionReference get _collectionAdotante =>
       _firestore.collection('adotante');
@@ -60,13 +61,9 @@ class AdocaoServices {
     }
   }
 
-
-
-   Stream<QuerySnapshot> getAllAdocao() {
-    
+  Stream<QuerySnapshot> getAllAdocao() {
     return _collectionRef.snapshots();
   }
-
 
   void showSuccessDialog(BuildContext context, String message) {
     showDialog(
@@ -93,5 +90,15 @@ class AdocaoServices {
       },
     );
   }
-}
 
+  Future aprovarAdocao(id, idAnimal) async {
+    String aprovado = "aprovado";
+    await _collectionRef.doc(id).update({'status': aprovado});
+    await _collectionAnimal.doc(idAnimal).update({'adotado': true});
+  }
+
+  Future reprovarAdocao(id) async {
+    String reprovado = "reprovado";
+    await _collectionRef.doc(id).update({'status': reprovado});
+  }
+}

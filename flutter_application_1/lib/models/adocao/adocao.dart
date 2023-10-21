@@ -23,6 +23,7 @@ class Adocao {
     return {
       'id': id,
       'animal': {
+        'id': animal!.id,
         'nome': animal!.nome,
         'especie': animal!.especie,
         'sexo': animal!.sexo,
@@ -36,6 +37,7 @@ class Adocao {
         //'adotado': adocao.animal.adotado,
       },
       'adotante': {
+        'id': adotante!.id,
         'nome': adotante!.nome,
         'cpf': adotante!.cpf,
         //'dtNascimento': adotante!.dtNascimento,

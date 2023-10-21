@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/models/adocao/adocao.dart';
 import 'package:flutter_application_1/models/animal/animal.dart';
 import 'package:flutter_application_1/models/usuarios/adotante.dart';
+import 'package:flutter_application_1/pages/aprovacao/details_adocao_page.dart';
 import 'package:flutter_application_1/pages/main_page.dart';
 import 'package:flutter_application_1/services/adocao/adocao_services.dart';
 
@@ -86,7 +87,7 @@ class _AprovarAdocaoState extends State<AprovarAdocao> {
                         // Verificar se o campo 'nome' e 'cpf' existe no documento antes de acessá-los
                         if (docSnapshot.data() != null &&
                             docSnapshot["status"] == "pendente") {
-                          String dtAdocao = docSnapshot['dataDeAdocao'];
+                          String animalnome = docSnapshot['animal']['nome'];
                           String nome = docSnapshot['adotante']['nome'];
 
                           Animal animal = Animal(
@@ -135,16 +136,15 @@ class _AprovarAdocaoState extends State<AprovarAdocao> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text("Data: $dtAdocao"),
+                                              Text("Animal: $animalnome"),
                                               Text("Adotante: $nome"),
-                                              //Text("Animal: ${adocao.animal}"),
                                             ],
                                           ),
                                         ),
                                         ElevatedButton(
                                           onPressed: () async {
-                                            // await redirectToPageWithParam(
-                                            //     adocao, context);
+                                            await redirectToPageWithParam(
+                                                adocao, context);
                                           },
                                           child: const Text('detalhar'),
                                         ),
@@ -177,14 +177,14 @@ class _AprovarAdocaoState extends State<AprovarAdocao> {
     );
   }
 
-  // redirectToPageWithParam(Adocao adocao, BuildContext context) async {
-  //   await Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => AdotanteDetailPage(
-  //         adotante: adotante,
-  //       ),
-  //     ),
-  //   );
-  // }
+  redirectToPageWithParam(Adocao adocao, BuildContext context) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AdocaoDetailPage(
+          adocao: adocao,
+        ),
+      ),
+    );
+  }
 }

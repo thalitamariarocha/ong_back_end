@@ -6,6 +6,7 @@ import 'package:flutter_application_1/pages/animals/cad_animal_page.dart';
 import 'package:flutter_application_1/pages/animals/list_animal_page.dart';
 import 'package:flutter_application_1/pages/aprovacao/aprov_adocao_page.dart';
 import 'package:flutter_application_1/pages/aprovacao/aprov_cadastro.dart';
+import 'package:flutter_application_1/pages/aprovacao/historico_adocao_page.dart';
 import 'package:flutter_application_1/pages/aprovacao/historico_cadastro.dart';
 import 'package:flutter_application_1/pages/cad_ong/cad_ong_page.dart';
 import 'package:flutter_application_1/pages/cad_voluntario/cad_Voluntario_page.dart';
@@ -26,7 +27,11 @@ class _MainPageState extends State<MainPage> {
   AnimalServices animalServices = AnimalServices();
   teste() async {
     bool validador = await _isAdmin();
-    return validador;
+    if (validador == true) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // _MainPageState();
@@ -98,61 +103,82 @@ class _MainPageState extends State<MainPage> {
                   ],
                 ),
                 //--------------------------------acesso admin-------------------
-                Column(
-                  children: [
-                    ListTile(
-                      title: const Text("Aprovar Cadastro"),
-                      // enabled: await _isAdmin(),
-                      onTap: () async {
-                        if (await _isAdmin() == true) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AprovarCadastro(),
-                            ),
-                          );
-                        } else if (await _isAdmin() == false) {
-                          animalServices.showErrorDialog(context,
-                              'Permissão Negada! Você não é administrador.');
-                        }
-                      },
-                    ),
-                    ListTile(
-                      title: const Text("Histórico de Cadastro"),
-                      //enabled:  await _isAdmin(),
-                      onTap: () async {
-                        if (await _isAdmin() == true) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HistoricoCadastro(),
-                            ),
-                          );
-                        } else if (await _isAdmin() == false) {
-                          animalServices.showErrorDialog(context,
-                              'Permissão Negada! Você não é administrador.');
-                        }
-                      },
-                    ),
-                    ListTile(
-                      title: const Text("Aprovar Adoção"),
-                      //enabled:  await _isAdmin(),
-                      onTap: () async {
-                        if (await _isAdmin() == true) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AprovarAdocao(),
-                            ),
-                          );
-                        } else if (await _isAdmin() == false) {
-                          animalServices.showErrorDialog(context,
-                              'Permissão Negada! Você não é administrador.');
-                        }
-                      },
-                    ),
-                  ],
-                ),
+                // Visibility(
+                //   visible: teste(),
+                //   child: 
+                  Column(
+                    children: [
+                      ListTile(
+                        title: const Text("Aprovar Cadastro"),
+                        // enabled: await _isAdmin(),
+                        onTap: () async {
+                          if (await _isAdmin() == true) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AprovarCadastro(),
+                              ),
+                            );
+                          } else if (await _isAdmin() == false) {
+                            animalServices.showErrorDialog(context,
+                                'Permissão Negada! Você não é administrador.');
+                          }
+                        },
+                      ),
+                      ListTile(
+                        title: const Text("Histórico de Cadastro"),
+                        //enabled:  await _isAdmin(),
+                        onTap: () async {
+                          if (await _isAdmin() == true) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HistoricoCadastro(),
+                              ),
+                            );
+                          } else if (await _isAdmin() == false) {
+                            animalServices.showErrorDialog(context,
+                                'Permissão Negada! Você não é administrador.');
+                          }
+                        },
+                      ),
+                      ListTile(
+                        title: const Text("Aprovar Adoção"),
+                        //enabled:  await _isAdmin(),
+                        onTap: () async {
+                          if (await _isAdmin() == true) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AprovarAdocao(),
+                              ),
+                            );
+                          } else if (await _isAdmin() == false) {
+                            animalServices.showErrorDialog(context,
+                                'Permissão Negada! Você não é administrador.');
+                          }
+                        },
+                      ),
+                      ListTile(
+                        title: const Text("Histórico de Adoções"),
+                        //enabled:  await _isAdmin(),
+                        onTap: () async {
+                          if (await _isAdmin() == true) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HistoricoAdocao(),
+                              ),
+                            );
+                          } else if (await _isAdmin() == false) {
+                            animalServices.showErrorDialog(context,
+                                'Permissão Negada! Você não é administrador.');
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                //),
                 //--------------------------------fim acesso admin-------------------
                 ListTile(
                   title: const Text("Animais Disponíveis"),
