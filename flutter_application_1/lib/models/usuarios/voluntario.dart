@@ -9,6 +9,7 @@ class Voluntario {
   String? endereco;
   String? tipoUsuario;
   String? vinculoOng;
+  bool admin = false;
 
   //construtor
   Voluntario({

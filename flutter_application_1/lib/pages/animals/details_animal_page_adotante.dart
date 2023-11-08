@@ -4,17 +4,16 @@ import 'package:flutter_application_1/models/animal/animal.dart';
 import 'package:flutter_application_1/services/adocao/adocao_services.dart';
 import 'package:flutter_application_1/services/animal/animal_services.dart';
 
-class DetailsAnimalPageIntern extends StatefulWidget {
+class DetailsAnimalPage extends StatefulWidget {
   final Animal animal;
 
-  const DetailsAnimalPageIntern({Key? key, required this.animal})
-      : super(key: key);
+  const DetailsAnimalPage({Key? key, required this.animal}) : super(key: key);
 
   @override
-  State<DetailsAnimalPageIntern> createState() => _DetailsAnimalPageIntern();
+  State<DetailsAnimalPage> createState() => _DetailsAnimalPage();
 }
 
-class _DetailsAnimalPageIntern extends State<DetailsAnimalPageIntern> {
+class _DetailsAnimalPage extends State<DetailsAnimalPage> {
   AnimalServices animalServices = AnimalServices();
   AdocaoServices adocaoServices = AdocaoServices();
 
@@ -154,36 +153,17 @@ class _DetailsAnimalPageIntern extends State<DetailsAnimalPageIntern> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text("Confirmar Exclusão"),
-                            content: Text(
-                                "Tem certeza de que deseja excluir este cadastro?"),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text("Cancelar"),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              TextButton(
-                                child: Text("Excluir"),
-                                onPressed: () {
-                                  // Chame a função para excluir o cadastro no Firestore
-                                  AnimalServices()
-                                      .deleteCadastro(widget.animal.id!);
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                    onPressed: () async {
+                      await adocaoServices.propostaAdocao(widget.animal.id,
+                          FirebaseAuth.instance.currentUser!.uid);
+                      animalServices.showSuccessDialogSReturn(context,
+                          'solicitação cadastrada. Aguarde a aprovação da ONG.');
                     },
-                    child: Text("Excluir Cadastro"),
+                    child: const Text(
+                      "Quero Adotar!!",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
                   ),
                   const SizedBox(height: 20),
                 ],

@@ -23,7 +23,7 @@ class _AdotanteDetailPageState extends State<AdocaoDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber, // Cor do app bar
+        backgroundColor: const Color.fromARGB(255, 245, 210, 15), // Cor do app bar
         title: const Text("Detalhes da Adoção"),
         centerTitle: true,
       ),

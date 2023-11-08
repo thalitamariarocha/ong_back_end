@@ -1,10 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/animals/list_animal_page_adotante.dart';
 import 'package:flutter_application_1/pages/home/home_page.dart';
 import 'package:flutter_application_1/pages/login/signup_page.dart';
 import 'package:flutter_application_1/pages/main_page.dart';
 import 'package:flutter_application_1/services/users/users_services.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -18,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
 
   TextEditingController _password = TextEditingController();
 
-  UserServices _userServices = UserServices();
+  // UserServices _userServices = UserServices();
 
   @override
   Widget build(BuildContext context) {
@@ -79,56 +83,77 @@ class _LoginPageState extends State<LoginPage> {
               ),
               alignment: Alignment.bottomRight,
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50),
-                    shape: LinearBorder.bottom(),
-                  ),
-                  onPressed: () async {
-                    if (await _userServices.signIn(
-                        _email.text, _password.text) == true) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MainPage(),
-                          ));
-                    }
-                    else{
-                      _userServices.showErrorDialog(context, "Sem Acesso. Aguarde Aprovação	do cadastro.");
-                    }
-                  },
-                  child: const Text(
-                    "Entrar",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  padding: const EdgeInsets.only(
-                    top: 15.0,
-                  ),
-                  alignment: Alignment.bottomRight,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SignUpPage(),
-                        ),
-                      );
-                    }, //todo esse ontap é o link para quando clicar, direcionar p/ pagina de registro (signup)
-                    child: const Text(
-                      "ainda não tem conta? registre-se",
-                      style: TextStyle(color: Color.fromARGB(255, 61, 6, 112)),
+            Consumer<UserServices>(
+              builder: (context, usersServices, child) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(50),
+                        shape: LinearBorder.bottom(),
+                      ),
+                      onPressed: () async {
+                        if (await usersServices.signIn(
+                                _email.text, _password.text) ==
+                            true) {
+                          final user = FirebaseAuth.instance.currentUser;
+                          final userData = await FirebaseFirestore.instance
+                              .collection('adotante')
+                              .doc(user?.uid)
+                              .get();
+                          if (userData.exists) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ListAnimalPage(),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MainPage(),
+                                ));
+                          }
+                        } else {
+                          usersServices.showErrorDialog(context,
+                              "Sem Acesso. Aguarde Aprovação	do cadastro.");
+                        }
+                      },
+                      child: const Text(
+                        "Entrar",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
                     ),
-                  ),
-                ),
-              ],
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(
+                        top: 15.0,
+                      ),
+                      alignment: Alignment.bottomRight,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SignUpPage(),
+                            ),
+                          );
+                        }, //todo esse ontap é o link para quando clicar, direcionar p/ pagina de registro (signup)
+                        child: const Text(
+                          "ainda não tem conta? registre-se",
+                          style:
+                              TextStyle(color: Color.fromARGB(255, 61, 6, 112)),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),
@@ -165,11 +190,4 @@ class _LoginPageState extends State<LoginPage> {
       return false;
     }
   }
-
- 
-
-
-
-
-
 }

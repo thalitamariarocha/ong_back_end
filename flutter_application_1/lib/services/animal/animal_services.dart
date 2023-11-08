@@ -19,25 +19,31 @@ class AnimalServices {
   DocumentReference get _firestoreRef =>
       _firestore.doc('animal/${cadAnimal.id}');
 
-  Future<bool> delete() {
-    try {
-      _firestoreRef.update({'deleted': true});
-      return Future.value(true);
-    } on FirebaseException catch (e) {
-      return Future.value(false);
-    }
-  }
+  // Future<bool> delete() {
+  //   try {
+  //     _firestoreRef.update({'deleted': true});
+  //     return Future.value(true);
+  //   } on FirebaseException catch (e) {
+  //     return Future.value(false);
+  //   }
+  // }
 
   Stream<QuerySnapshot> getAllAnimais() {
     return _collectionRef.snapshots();
   }
 
- //-------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------
+//a partir daqui são funções para a excluir animais
+  deleteCadastro(id) async {
+    try {
+      await FirebaseFirestore.instance.collection('animal').doc(id).delete();
+      print('Dados excluídos com sucesso.');
+    } catch (e) {
+      print('Erro ao excluir os dados: $e');
+    }
+  }
 
- 
-
-
- //-------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------
 
   //a partir daqui são funções para o cadastro de animais
 
@@ -81,6 +87,7 @@ class AnimalServices {
     cadAnimal.castrado = castrado;
     cadAnimal.observacao = observacao;
     cadAnimal.vinculoOng = selectedOng;
+    cadAnimal.adotado = "false";
     cadAnimal.toJson();
 
     try {
@@ -160,6 +167,27 @@ class AnimalServices {
                 Navigator.of(context).pop();
               },
               child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showSuccessDialogSReturn(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Sucesso'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Fechar o diálogo quando o botão "OK" for pressionado
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
             ),
           ],
         );

@@ -20,10 +20,10 @@ class _AdotanteDetailPageState extends State<AdotanteDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber, // Cor do app bar
+        backgroundColor:
+            const Color.fromARGB(255, 245, 210, 15), // Cor do app bar
         title: Text("Detalhes do Adotante"),
         centerTitle: true,
-        
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(8.0),
@@ -132,12 +132,12 @@ class _AdotanteDetailPageState extends State<AdotanteDetailPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                     style: ElevatedButton.styleFrom(
-                       primary: Colors.red,
-                    //   shape: RoundedRectangleBorder(
-                    //   borderRadius: BorderRadius.circular(20),
-                    //   ),
-                     ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red,
+                      //   shape: RoundedRectangleBorder(
+                      //   borderRadius: BorderRadius.circular(20),
+                      //   ),
+                    ),
                     onPressed: () {
                       adotanteServices
                           .reprovarAdotante(widget.adotante.id.toString());
@@ -152,17 +152,19 @@ class _AdotanteDetailPageState extends State<AdotanteDetailPage> {
                     },
                     child: const Text(
                       "Reprovar Cadastro",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.black),
                     ),
                   ),
                   SizedBox(width: 16),
                   ElevatedButton(
-                     style: ElevatedButton.styleFrom(
-                       primary: Colors.green,
-                    // shape: RoundedRectangleBorder(
-                    //   borderRadius: BorderRadius.circular(20),
-                    // ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                      // shape: RoundedRectangleBorder(
+                      //   borderRadius: BorderRadius.circular(20),
+                      // ),
                     ),
                     onPressed: () {
                       adotanteServices
@@ -180,8 +182,10 @@ class _AdotanteDetailPageState extends State<AdotanteDetailPage> {
                     },
                     child: const Text(
                       "Aprovar Cadastro",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.black),
                     ),
                   ),
                 ],

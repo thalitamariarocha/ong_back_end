@@ -4,10 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/usuarios/adotante.dart';
+import 'package:flutter_application_1/models/usuarios/voluntario.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-class UserServices {
+class UserServices extends ChangeNotifier {
 //obter instancia do firebase auth
   late String idParaImagem;
   Uint8List webImage = Uint8List(8);
@@ -15,6 +16,7 @@ class UserServices {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Adotante cadAdotante = Adotante();
+  Voluntario cadVoluntario = Voluntario();
   FirebaseStorage storage = FirebaseStorage.instance;
   CollectionReference get _collectionRef => _firestore.collection('adotante');
 
@@ -83,6 +85,7 @@ class UserServices {
       String uuid = FirebaseAuth.instance.currentUser!.uid;
       DocumentSnapshot snapshot =
           await _firestore.collection('adotante').doc(uuid).get();
+      _isAdmin(uuid);
       if (snapshot.exists) {
         Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
         String aprovado = data['aprovado'];
@@ -193,16 +196,54 @@ class UserServices {
   }
 
   Future aprovarAdotante(id) async {
-    //String uuid = FirebaseAuth.instance.currentUser!.uid;
-    //String idAdotante = id;
     String aprovado = "aprovado";
     await _collectionRef.doc(id).update({'aprovado': aprovado});
   }
 
   Future reprovarAdotante(id) async {
-    //String uuid = FirebaseAuth.instance.currentUser!.uid;
-    //String idAdotante = id;
     String reprovado = "reprovado";
     await _collectionRef.doc(id).update({'aprovado': reprovado});
   }
+
+  _isAdmin(String uid) async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('voluntario')
+        .where('id', isEqualTo: uid)
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      cadVoluntario.admin = false;
+    }
+
+    Map<String, dynamic> userData =
+        snapshot.docs.first.data() as Map<String, dynamic>;
+    String tipoUsuario = userData['tipoUsuario'];
+    if (tipoUsuario == 'Administrador') {
+      cadVoluntario.admin = true;
+    } else {
+      cadVoluntario.admin = false;
+    }
+    notifyListeners();
+  }
+
+  // _isVoluntario(String uid) async {
+  //   QuerySnapshot snapshot = await FirebaseFirestore.instance
+  //       .collection('voluntario')
+  //       .where('id', isEqualTo: uid)
+  //       .get();
+
+  //   if (snapshot.docs.isEmpty) {
+  //     cadVoluntario.admin = false;
+  //   }
+
+  //   Map<String, dynamic> userData =
+  //       snapshot.docs.first.data() as Map<String, dynamic>;
+  //   String tipoUsuario = userData['tipoUsuario'];
+  //   if (tipoUsuario == 'Administrador') {
+  //     cadVoluntario.admin = true;
+  //   } else {
+  //     cadVoluntario.admin = false;
+  //   }
+  //   notifyListeners();
+  // }
 }

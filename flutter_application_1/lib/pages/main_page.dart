@@ -2,8 +2,10 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/models/usuarios/voluntario.dart';
 import 'package:flutter_application_1/pages/animals/cad_animal_page.dart';
 import 'package:flutter_application_1/pages/animals/list_animal_page.dart';
+import 'package:flutter_application_1/pages/animals/list_animal_page_adotante.dart';
 import 'package:flutter_application_1/pages/aprovacao/aprov_adocao_page.dart';
 import 'package:flutter_application_1/pages/aprovacao/aprov_cadastro.dart';
 import 'package:flutter_application_1/pages/aprovacao/historico_adocao_page.dart';
@@ -14,6 +16,9 @@ import 'package:flutter_application_1/pages/login/login_page.dart';
 import 'package:flutter_application_1/pages/user_profile/user_profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/services/animal/animal_services.dart';
+import 'package:flutter_application_1/services/users/users_services.dart';
+import 'package:flutter_application_1/services/voluntario/voluntario_services.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key? key});
@@ -25,16 +30,6 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _index = 0; //variavel que vai calcular a posicao do index automatico
   AnimalServices animalServices = AnimalServices();
-  teste() async {
-    bool validador = await _isAdmin();
-    if (validador == true) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  // _MainPageState();
 
   @override
   build(BuildContext context) {
@@ -103,90 +98,65 @@ class _MainPageState extends State<MainPage> {
                   ],
                 ),
                 //--------------------------------acesso admin-------------------
-                // Visibility(
-                //   visible: teste(),
-                //   child: 
-                  Column(
-                    children: [
-                      ListTile(
-                        title: const Text("Aprovar Cadastro"),
-                        // enabled: await _isAdmin(),
-                        onTap: () async {
-                          if (await _isAdmin() == true) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AprovarCadastro(),
-                              ),
-                            );
-                          } else if (await _isAdmin() == false) {
-                            animalServices.showErrorDialog(context,
-                                'Permissão Negada! Você não é administrador.');
-                          }
-                        },
+                Consumer<UserServices>(
+                  builder: (context, usersServices, child) {
+                    return Visibility(
+                      visible: usersServices.cadVoluntario.admin ? true : false,
+                      child: Column(
+                        children: [
+                          ListTile(
+                              title: const Text("Aprovar Cadastro"),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AprovarCadastro(),
+                                  ),
+                                );
+                              }),
+                          ListTile(
+                              title: const Text("Aprovar Adoção"),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AprovarAdocao(),
+                                  ),
+                                );
+                              }),
+                        ],
                       ),
-                      ListTile(
-                        title: const Text("Histórico de Cadastro"),
-                        //enabled:  await _isAdmin(),
-                        onTap: () async {
-                          if (await _isAdmin() == true) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const HistoricoCadastro(),
-                              ),
-                            );
-                          } else if (await _isAdmin() == false) {
-                            animalServices.showErrorDialog(context,
-                                'Permissão Negada! Você não é administrador.');
-                          }
-                        },
-                      ),
-                      ListTile(
-                        title: const Text("Aprovar Adoção"),
-                        //enabled:  await _isAdmin(),
-                        onTap: () async {
-                          if (await _isAdmin() == true) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AprovarAdocao(),
-                              ),
-                            );
-                          } else if (await _isAdmin() == false) {
-                            animalServices.showErrorDialog(context,
-                                'Permissão Negada! Você não é administrador.');
-                          }
-                        },
-                      ),
-                      ListTile(
-                        title: const Text("Histórico de Adoções"),
-                        //enabled:  await _isAdmin(),
-                        onTap: () async {
-                          if (await _isAdmin() == true) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const HistoricoAdocao(),
-                              ),
-                            );
-                          } else if (await _isAdmin() == false) {
-                            animalServices.showErrorDialog(context,
-                                'Permissão Negada! Você não é administrador.');
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                //),
+                    );
+                  },
+                ),
                 //--------------------------------fim acesso admin-------------------
                 ListTile(
-                  title: const Text("Animais Disponíveis"),
+                    title: const Text("Histórico de Adoções"),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HistoricoAdocao(),
+                        ),
+                      );
+                    }),
+                ListTile(
+                    title: const Text("Histórico de Cadastro"),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HistoricoCadastro(),
+                        ),
+                      );
+                    }),
+                ListTile(
+                  title: const Text("Animais Cadastrados"),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ListAnimalPage(),
+                        builder: (context) => const ListAnimalPageInterno(),
                       ),
                     );
                   },
@@ -231,35 +201,5 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
     );
-  }
-}
-
-Future<bool> _isAdmin() async {
-  // Obtém o usuário logado
-  User user = FirebaseAuth.instance.currentUser!;
-
-  if (user == null) {
-    return false;
-  }
-// Obtém o id do usuário
-  String uid = user.uid;
-
-  // Procura o usuário no Firestore
-  QuerySnapshot snapshot = await FirebaseFirestore.instance
-      .collection('voluntario')
-      .where('id', isEqualTo: uid)
-      .get();
-
-  if (snapshot.docs.isEmpty) {
-    return false;
-  }
-
-  Map<String, dynamic> userData =
-      snapshot.docs.first.data() as Map<String, dynamic>;
-  String tipoUsuario = userData['tipoUsuario'];
-  if (tipoUsuario == 'Administrador') {
-    return true;
-  } else {
-    return false;
   }
 }
