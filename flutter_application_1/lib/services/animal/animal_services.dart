@@ -19,15 +19,6 @@ class AnimalServices {
   DocumentReference get _firestoreRef =>
       _firestore.doc('animal/${cadAnimal.id}');
 
-  // Future<bool> delete() {
-  //   try {
-  //     _firestoreRef.update({'deleted': true});
-  //     return Future.value(true);
-  //   } on FirebaseException catch (e) {
-  //     return Future.value(false);
-  //   }
-  // }
-
   Stream<QuerySnapshot> getAllAnimais() {
     return _collectionRef.snapshots();
   }
@@ -40,6 +31,92 @@ class AnimalServices {
       print('Dados excluídos com sucesso.');
     } catch (e) {
       print('Erro ao excluir os dados: $e');
+    }
+  }
+
+  Future<bool> atualizaAnimal(
+      String id,
+      especie,
+      sexo,
+      porte,
+      dtnascimento,
+      nome,
+      vacina,
+      castrado,
+      observacao,
+      vinculoOng,
+      dynamic imageFile,
+      adotado) async {
+    try {
+      String url = "";
+
+      //Quero descobrir se o tipo é string ou Uint8List
+      var ehString = imageFile.runtimeType;
+      if (ehString != String) {
+        print('Dados atualizados com sucesso.');
+
+        Reference ref = storage.ref().child('animal').child(id);
+        UploadTask task = ref.putData(
+          imageFile,
+          SettableMetadata(
+            contentType: 'image/jpg',
+          ),
+        );
+
+        url = await (await task.whenComplete(() {})).ref.getDownloadURL();
+      } else {
+        url = imageFile;
+      }
+
+      cadAnimal.id = id;
+      cadAnimal.especie = especie;
+      cadAnimal.sexo = sexo;
+      cadAnimal.porte = porte;
+      cadAnimal.dtNascimento = dtnascimento;
+      cadAnimal.nome = nome;
+      cadAnimal.vacina = vacina;
+      cadAnimal.castrado = castrado;
+      cadAnimal.observacao = observacao;
+      cadAnimal.image = url;
+      cadAnimal.vinculoOng = selectedOng;
+      cadAnimal.adotado = adotado;
+      cadAnimal.toJson();
+      await _firestoreRef.update(cadAnimal.toJson());
+
+      // DocumentReference docRef = _collectionRef.doc(id);
+      // await docRef.update({'image': url});
+
+      print('imagem atualizada com sucesso.');
+
+      return Future.value(true);
+    } catch (e) {
+      print('Erro ao atualizar os dados: $e');
+      return Future.value(false);
+    }
+  }
+
+  Future<void> loadDataFromFirebase(String id) async {
+    try {
+      final documentSnapshot =
+          await FirebaseFirestore.instance.collection('animal').doc(id).get();
+      cadAnimal.id = id;
+      cadAnimal.especie = documentSnapshot['especie'];
+      cadAnimal.sexo = documentSnapshot['sexo'];
+      cadAnimal.porte = documentSnapshot['porte'];
+      cadAnimal.dtNascimento = documentSnapshot['dtNascimento'];
+      cadAnimal.nome = documentSnapshot['nome'];
+      cadAnimal.vacina = documentSnapshot['vacina'];
+      cadAnimal.castrado = documentSnapshot['castrado'];
+      cadAnimal.observacao = documentSnapshot['observacao'];
+      cadAnimal.vinculoOng = documentSnapshot['vinculoOng'];
+      cadAnimal.adotado = documentSnapshot['adotado'];
+      cadAnimal.image = documentSnapshot['image'];
+
+      //return cadAnimal;
+      //cadAnimal.toJson();
+    } catch (e) {
+      print(e);
+      throw e;
     }
   }
 
@@ -67,7 +144,7 @@ class AnimalServices {
     Image.memory(webImage);
     ImagePicker picker = ImagePicker();
     XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    //webImage2 = File(image!.path);
+
     if (image != null) {
       var imageSelected = await image.readAsBytes();
       webImage = imageSelected;
@@ -124,8 +201,6 @@ class AnimalServices {
     }
     return Future.value(true);
   }
-
-  //uploadImageToFirebase({required imageFile}) async {}
 
   void showSuccessDialog(BuildContext context, String message) {
     showDialog(

@@ -24,7 +24,7 @@ class _ProductListPageState extends State<ListAnimalPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false, //para não aparecer a seta de voltar
-        backgroundColor: const Color.fromARGB(255, 238, 164, 5),
+        backgroundColor: const Color.fromARGB(255, 245, 210, 15),
         title: const Text("Animais Cadastrados"),
         centerTitle: true,
         actions: [

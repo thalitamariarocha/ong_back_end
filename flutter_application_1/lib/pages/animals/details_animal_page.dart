@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/animal/animal.dart';
+import 'package:flutter_application_1/pages/animals/edit_animal_page.dart';
 import 'package:flutter_application_1/services/adocao/adocao_services.dart';
 import 'package:flutter_application_1/services/animal/animal_services.dart';
 
@@ -17,6 +18,7 @@ class DetailsAnimalPageIntern extends StatefulWidget {
 class _DetailsAnimalPageIntern extends State<DetailsAnimalPageIntern> {
   AnimalServices animalServices = AnimalServices();
   AdocaoServices adocaoServices = AdocaoServices();
+  final AnimalServices _animalServices = AnimalServices();
 
   @override
   Widget build(BuildContext context) {
@@ -154,13 +156,31 @@ class _DetailsAnimalPageIntern extends State<DetailsAnimalPageIntern> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
+                    onPressed: () async {
+                      await _animalServices
+                          .loadDataFromFirebase(widget.animal.id!);
+
+                      // Navegue para a página de edição de registro, passando o ID do registro como argumento, se necessário.
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditAnimalPage(
+                            animal: _animalServices.cadAnimal,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text('Editar Registro'),
+                  ),
+//------------------------------------------------------------------------------
+                  ElevatedButton(
                     onPressed: () {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text("Confirmar Exclusão"),
-                            content: Text(
+                            title: const Text("Confirmar Exclusão"),
+                            content: const Text(
                                 "Tem certeza de que deseja excluir este cadastro?"),
                             actions: <Widget>[
                               TextButton(
